@@ -1,6 +1,7 @@
 const bodyParser = require('body-parser')
 const express = require('express')
 const Tasks = require('./api/tasks')
+const Tags = require('./api/tags')
 import cors from 'cors'
 import {generalErrorHlr, authErrorHlr, notFoundErrorHlr} from './error_handlers'
 import {authMW, optionalAuthMW} from './auth'
@@ -23,6 +24,10 @@ module.exports = (app, g) => {
   const taskApp = express()
   Tasks(taskApp, g)
   app.use('/tasks', taskApp)
+
+  const tagApp = express()
+  Tags(tagApp, g)
+  app.use('/tags', tagApp)
 
   // ERROR HANDLING ------------------------------------------------------------
   app.use(notFoundErrorHlr, authErrorHlr, generalErrorHlr)
