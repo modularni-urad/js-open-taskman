@@ -9,7 +9,8 @@ module.exports = (g) => {
 
   const p = {
     name: 'pok1',
-    tags: 'dwarfs'
+    tags: 'dwarfs',
+    due: new Date()
   }
 
   return describe('tasks', () => {

@@ -13,7 +13,7 @@ module.exports = (app, g) => {
   })
 
   app.post(`/:id/comments`, g.authMW, g.bodyParser, (req, res, next) => {
-    Object.assign(req.body, {author: req.user.id})
+    Object.assign(req.body, {author: req.user.id, taskid: req.params.id})
     g.knex(TABLE_NAMES.COMMENTS).returning('id').insert(req.body)
     .then(savedid => {
       res.status(201).json(savedid)
@@ -33,7 +33,7 @@ module.exports = (app, g) => {
   })
 
   app.get(`/`, g.optionalAuthMW, (req, res, next) => {
-    let q = g.knex(TABLE_NAMES.TASKS).where('parent', req.params.parent || null)
+    let q = g.knex(TABLE_NAMES.TASKS)
     if (req.query._select) {
       q = q.select(req.query._select.split(','))
       delete req.query._select
