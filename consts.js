@@ -1,6 +1,20 @@
 
 export const TABLE_NAMES = {
-  TASKS: 'tasks',
-  COMMENTS: 'comments',
-  FILES: 'files'
+  TASKS: 'taskman_tasks',
+  COMMENTS: 'taskman_comments',
+  FILES: 'taskman_files'
+}
+
+export const PRIORITY = {
+  LOW: 'low',
+  NORMAL: 'new',
+  HIGH: 'hi',
+  CRITICAL: 'cri'
+}
+
+export const STATE = {
+  NEW: 'new',
+  INPROGRESS: 'prog',
+  WAIT3PARTY: '3rdP',
+  DONE: 'done'
 }

@@ -1,6 +1,6 @@
 /* global describe it */
 const chai = require('chai')
-// const should = chai.should()
+chai.should()
 // import _ from 'underscore'
 
 module.exports = (g) => {
@@ -9,12 +9,10 @@ module.exports = (g) => {
 
   return describe('tags', () => {
     //
-    it('shall get the pok1', () => {
-      return r.get(`/tags`)
-      .then(res => {
-        console.log(res.body)
-        res.should.have.status(200)
-      })
+    it('shall get the pok1', async () => {
+      const res = await r.get('/tags')
+      console.log(res.body)
+      res.should.have.status(200)
     })
   })
 }

@@ -1,18 +1,13 @@
-require('dotenv').config()
-const express = require('express')
-const App = require('./app')
-const initDB = require('./db')
-const port = process.env.PORT
 
-const app = express()
+import InitApp from './index'
 
-initDB().then(knex => {
-  App(app, {knex})
-
-  app.listen(port, (err) => {
-    if (err) {
-      throw err
-    }
-    console.log(`radagast listens on ${port}`)
+const host = process.env.HOST || '127.0.0.1'
+const port = process.env.PORT || 4000
+InitApp().then(app => {
+  app.listen(port, host, (err) => {
+    if (err) throw err
+    console.log(`radagast listens on ${host}:${port}`)
   })
+}).catch(err => {
+  console.error(err)
 })

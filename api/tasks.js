@@ -1,66 +1,40 @@
-import {TABLE_NAMES} from '../consts'
+import { whereFilter } from 'knex-filter-loopback'
+import _ from 'underscore'
+import { TABLE_NAMES } from '../consts'
 
-module.exports = (app, g) => {
-  //
-  app.post(`/`, g.authMW, g.bodyParser, (req, res, next) => {
-    Object.assign(req.body, {owner: req.user.id})
-    g.knex(TABLE_NAMES.TASKS).returning('id').insert(req.body)
-    .then(savedid => {
-      res.status(201).json(savedid)
-      next()
-    })
-    .catch(next)
-  })
+export default { create, createComment, update, list, listComments }
 
-  app.post(`/:id/comments`, g.authMW, g.bodyParser, (req, res, next) => {
-    Object.assign(req.body, {author: req.user.id, taskid: req.params.id})
-    g.knex(TABLE_NAMES.COMMENTS).returning('id').insert(req.body)
-    .then(savedid => {
-      res.status(201).json(savedid)
-      next()
-    })
-    .catch(next)
-  })
+function create (body, UID, knex) {
+  Object.assign(body, { owner: UID })
+  return knex(TABLE_NAMES.TASKS).returning('id').insert(body)
+}
 
-  app.put(`/:id`, g.authMW, g.bodyParser, (req, res, next) => {
-    const change = Object.assign(req.body, {changed: new Date()})
-    g.knex(TABLE_NAMES.TASKS).where('id', req.params.id).update(change)
-    .then(saved => {
-      res.json(saved)
-      next()
-    })
-    .catch(next)
-  })
+function createComment (taskid, body, UID, knex) {
+  Object.assign(body, { author: UID, taskid })
+  return knex(TABLE_NAMES.COMMENTS).returning('id').insert(body)
+}
 
-  app.get(`/`, g.optionalAuthMW, (req, res, next) => {
-    let q = g.knex(TABLE_NAMES.TASKS)
-    if (req.query._select) {
-      q = q.select(req.query._select.split(','))
-      delete req.query._select
-    }
-    for (let k in req.query || {}) {
-      q = q.where(k, '=', req.query[k])
-    }
-    q.then(found => {
-      res.json(found)
-      next()
-    })
-    .catch(next)
-  })
+const editables = ['name', 'tags', 'desc', 'solver', 'state', 'prio', 'due']
 
-  app.get(`/:id`, g.optionalAuthMW, (req, res, next) => {
-    g.knex(TABLE_NAMES.TASKS).where({id: req.params.id}).first().then(data => {
-      res.json(data)
-      next()
-    }).catch(next)
-  })
+function update (taskid, body, UID, knex) {
+  body = _.pick(body, editables)
+  const change = Object.assign(body, { changed: new Date() })
+  return knex(TABLE_NAMES.TASKS).where('id', taskid).update(change)
+}
 
-  app.get(`/:id/comments`, g.optionalAuthMW, (req, res, next) => {
-    g.knex(TABLE_NAMES.COMMENTS).where('taskid', req.params.id).then(data => {
-      res.json(data)
-      next()
-    }).catch(next)
-  })
+function list (query, knex) {
+  const perPage = Number(query.perPage) || 10
+  const currentPage = Number(query.currentPage) || null
+  const fields = query.fields ? query.fields.split(',') : null
+  const sort = query.sort ? query.sort.split(':') : null
+  const filter = query.filter ? JSON.parse(query.filter) : null
+  let qb = knex(TABLE_NAMES.TASKS)
+  qb = filter ? qb.where(whereFilter(filter)) : qb
+  qb = fields ? qb.select(fields) : qb
+  qb = sort ? qb.orderBy(sort[0], sort[1]) : qb
+  return currentPage ? qb.paginate({ perPage, currentPage }) : qb
+}
 
-  return app
+function listComments (taskid, knex) {
+  return knex(TABLE_NAMES.COMMENTS).where('taskid', taskid)
 }

@@ -1,9 +1,10 @@
-import {TABLE_NAMES} from '../consts'
+import { TABLE_NAMES } from '../consts'
 
 exports.up = (knex, Promise) => {
   return knex.schema.createTable(TABLE_NAMES.COMMENTS, (table) => {
     table.increments('id').primary()
     table.integer('taskid').notNullable()
+      .references('id').inTable(TABLE_NAMES.TASKS)
     table.text('content').notNullable()
     table.integer('author').notNullable()
     table.timestamp('created').notNullable().defaultTo(knex.fn.now())

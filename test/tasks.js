@@ -1,7 +1,7 @@
 /* global describe it */
-const chai = require('chai')
-// const should = chai.should()
 import _ from 'underscore'
+const chai = require('chai')
+chai.should()
 
 module.exports = (g) => {
   //
@@ -10,53 +10,44 @@ module.exports = (g) => {
   const p = {
     name: 'pok1',
     tags: 'dwarfs',
+    desc: 'pokus',
     due: new Date()
   }
 
   return describe('tasks', () => {
     //
-    it('must not create a new item wihout auth', () => {
-      return r.post('/tasks').send(p)
-      .then(res => {
-        res.should.have.status(401)
-      })
+    it('must not create a new item wihout auth', async () => {
+      g.UID = null
+      const res = await r.post('/tasks').send(p)
+      res.should.have.status(401)
     })
 
-    it('shall create a new item without mandatory item', () => {
-      return r.post('/tasks').send(_.omit(p, 'name'))
-      .set('Authorization', g.gimliToken)
-      .then(res => {
-        res.should.have.status(400)
-      })
+    it('shall create a new item without mandatory item', async () => {
+      g.UID = 100
+      const res = await r.post('/tasks').send(_.omit(p, 'name'))
+      res.should.have.status(400)
     })
 
-    it('shall create a new item pok1', () => {
-      return r.post('/tasks').send(p)
-      .set('Authorization', g.gimliToken)
-      .then(function (res) {
-        res.should.have.status(201)
-        res.should.have.header('content-type', /^application\/json/)
-        p.id = res.body[0]
-      })
+    it('shall create a new item pok1', async () => {
+      const res = await r.post('/tasks').send(p)
+      res.should.have.status(201)
+      res.should.have.header('content-type', /^application\/json/)
+      p.id = res.body[0]
     })
 
-    it('shall update the item pok1', () => {
+    it('shall update the item pok1', async () => {
       const change = {
         name: 'pok1changed'
       }
-      return r.put(`/tasks/${p.id}`).send(change)
-      .set('Authorization', g.gimliToken)
-      .then(res => {
-        res.should.have.status(200)
-      })
+      const res = await r.put(`/tasks/${p.id}`).send(change)
+      res.should.have.status(200)
     })
 
-    it('shall get the pok1', () => {
-      return r.get(`/tasks/${p.id}`)
-      .then(res => {
-        res.body.name.should.eql('pok1changed')
-        res.should.have.status(200)
-      })
+    it('shall get the pok1', async () => {
+      const res = await r.get('/tasks/').query({ id: p.id })
+      res.body.length.should.eql(1)
+      res.body[0].name.should.eql('pok1changed')
+      res.should.have.status(200)
     })
   })
 }
