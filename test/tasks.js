@@ -49,5 +49,12 @@ module.exports = (g) => {
       res.body[0].name.should.eql('pok1changed')
       res.should.have.status(200)
     })
+
+    it('shall list with paginate', async () => {
+      const res = await r.get('/tasks/').query({ currentPage: 1, perPage: 2 })
+      // res.body.length.should.eql(1)
+      // res.body[0].name.should.eql('pok1changed')
+      res.should.have.status(200)
+    })
   })
 }

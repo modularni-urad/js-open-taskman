@@ -1,9 +1,9 @@
-const Knex = require('knex')
+import knex from 'knex'
 
 // const rand = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 15)
 // process.env.DATABASE_URL = rand + 'test.sqlite'
 
-export default function initDB (migrationsDir) {
+export default async function initDB (migrationsDir) {
   const opts = {
     client: 'sqlite3',
     connection: {
@@ -15,9 +15,9 @@ export default function initDB (migrationsDir) {
       directory: migrationsDir
     }
   }
-  const knex = Knex(opts)
+  const db = knex(opts)
 
-  return knex.migrate.latest().then(() => {
-    return knex
-  })
+  await db.migrate.latest()
+
+  return db
 }

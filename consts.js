@@ -7,7 +7,7 @@ export const TABLE_NAMES = {
 
 export const PRIORITY = {
   LOW: 'low',
-  NORMAL: 'new',
+  NORMAL: 'nor',
   HIGH: 'hi',
   CRITICAL: 'cri'
 }

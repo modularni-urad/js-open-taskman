@@ -9,11 +9,11 @@ import initTaskRoutes from './api/task_routes'
 import initTagRoutes from './api/tags'
 
 export default async function init (mocks = null) {
+  attachPaginate()
   const migrationsDir = path.join(__dirname, 'migrations')
   const knex = mocks
     ? await mocks.dbinit(migrationsDir)
     : await initDB(migrationsDir)
-  attachPaginate()
 
   const app = express()
   const JSONBodyParser = bodyParser.json()
