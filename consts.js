@@ -16,5 +16,6 @@ export const STATE = {
   NEW: 'new',
   INPROGRESS: 'prog',
   WAIT3PARTY: '3rdP',
-  DONE: 'done'
+  DONE: 'done',
+  CLOSED: 'closd'
 }
