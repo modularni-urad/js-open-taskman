@@ -11,7 +11,9 @@ function create (body, UID, knex) {
 
 function createComment (taskid, body, UID, knex) {
   Object.assign(body, { author: UID, taskid })
-  return knex(TABLE_NAMES.COMMENTS).returning('id').insert(body)
+  return knex(TABLE_NAMES.COMMENTS).returning('id').insert(body).then(res => {
+    return knex(TABLE_NAMES.COMMENTS).where('id', res[0]).first()
+  })
 }
 
 const editables = ['name', 'tags', 'desc', 'solver', 'state', 'prio', 'due']
