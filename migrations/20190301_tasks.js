@@ -6,7 +6,7 @@ exports.up = (knex, Promise) => {
     table.increments('id').primary()
     table.string('name', 64).notNullable()
     table.text('desc').notNullable()
-    table.string('tags', 64).notNullable()
+    table.json('tags').notNullable()
     table.integer('owner').notNullable()
     table.integer('solver')
     table.enum('state', _.values(STATE)).notNullable().defaultTo(STATE.NEW)

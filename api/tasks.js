@@ -6,6 +6,7 @@ export default { create, createComment, update, list, listComments }
 
 function create (body, UID, knex) {
   Object.assign(body, { owner: UID })
+  body.tags = !_.isString(body.tags) ? body.tags : JSON.stringify(body.tags)
   return knex(TABLE_NAMES.TASKS).returning('id').insert(body)
 }
 
@@ -20,6 +21,9 @@ const editables = ['name', 'tags', 'desc', 'solver', 'state', 'prio', 'due']
 
 function update (taskid, body, UID, knex) {
   body = _.pick(body, editables)
+  if (!_.isUndefined(body.tags) && !_.isString(body.tags)) {
+    body.tags = JSON.stringify(body.tags)
+  }
   const change = Object.assign(body, { changed: new Date() })
   return knex(TABLE_NAMES.TASKS).where('id', taskid).update(change)
 }
