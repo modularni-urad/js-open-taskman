@@ -6,7 +6,7 @@ export default { create, createComment, update, list, listComments }
 
 function create (body, UID, knex) {
   Object.assign(body, { owner: UID })
-  body.tags = !_.isString(body.tags) ? body.tags : JSON.stringify(body.tags)
+  body.tags = _.isString(body.tags) ? body.tags : JSON.stringify(body.tags)
   return knex(TABLE_NAMES.TASKS).returning('id').insert(body)
 }
 
