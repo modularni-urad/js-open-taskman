@@ -1,7 +1,7 @@
 {
   "name": "modularni-urad-taskman",
   "description": "task manager api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "start": "node -r esm server.js",
     "startdbg": "node -r esm --inspect-brk server.js",
@@ -18,14 +18,15 @@
     "npm": ">=6.x"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "body-parser": "^1.18.2",
     "esm": "^3.2.25",
-    "express": "^4.11.1",
+    "express": "^4.17.1",
     "knex": "^0.21.16",
     "knex-filter-loopback": "^0.3.0",
     "knex-paginate": "^1.2.1",
-    "modularni-urad-utils": "1.1.2",
-    "underscore": "^1.9.1"
+    "modularni-urad-utils": "1.2.0",
+    "underscore": "^1.13.1"
   },
   "devDependencies": {
     "chai": "^4.1.2",

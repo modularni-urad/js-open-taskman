@@ -7,12 +7,12 @@ export default { create, createComment, update, list, listComments }
 function create (body, UID, knex) {
   Object.assign(body, { owner: UID })
   body.tags = _.isString(body.tags) ? body.tags : JSON.stringify(body.tags)
-  return knex(TABLE_NAMES.TASKS).returning('id').insert(body)
+  return knex(TABLE_NAMES.TASKS).returning('*').insert(body)
 }
 
 function createComment (taskid, body, UID, knex) {
   Object.assign(body, { author: UID, taskid })
-  return knex(TABLE_NAMES.COMMENTS).returning('id').insert(body).then(res => {
+  return knex(TABLE_NAMES.COMMENTS).returning('*').insert(body).then(res => {
     return knex(TABLE_NAMES.COMMENTS).where('id', res[0]).first()
   })
 }
@@ -25,7 +25,7 @@ function update (taskid, body, UID, knex) {
     body.tags = JSON.stringify(body.tags)
   }
   const change = Object.assign(body, { changed: new Date() })
-  return knex(TABLE_NAMES.TASKS).where('id', taskid).update(change)
+  return knex(TABLE_NAMES.TASKS).where('id', taskid).update(change).returning('*')
 }
 
 function list (query, knex) {

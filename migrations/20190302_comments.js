@@ -6,7 +6,7 @@ exports.up = (knex, Promise) => {
     table.integer('taskid').notNullable()
       .references('id').inTable(TABLE_NAMES.TASKS)
     table.text('content').notNullable()
-    table.integer('author').notNullable()
+    table.string('author', 64).notNullable()
     table.timestamp('created').notNullable().defaultTo(knex.fn.now())
   })
 }

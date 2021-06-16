@@ -25,11 +25,12 @@ module.exports = (g) => {
     it('shall create a new item without mandatory item', async () => {
       g.UID = 100
       const res = await r.post('/tasks').send(_.omit(p, 'name'))
+        .set('Authorization', 'Bearer f')
       res.should.have.status(400)
     })
 
     it('shall create a new item pok1', async () => {
-      const res = await r.post('/tasks').send(p)
+      const res = await r.post('/tasks').send(p).set('Authorization', 'Bearer f')
       res.should.have.status(201)
       res.should.have.header('content-type', /^application\/json/)
       p.id = res.body[0]
@@ -39,7 +40,7 @@ module.exports = (g) => {
       const change = {
         name: 'pok1changed'
       }
-      const res = await r.put(`/tasks/${p.id}`).send(change)
+      const res = await r.put(`/tasks/${p.id}`).send(change).set('Authorization', 'Bearer f')
       res.should.have.status(200)
     })
 
