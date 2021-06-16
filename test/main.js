@@ -36,6 +36,7 @@ describe('app', () => {
   describe('API', () => {
     const submodules = [
       './tasks',
+      './solvers',
       './tags'
     ]
     submodules.map((i) => {

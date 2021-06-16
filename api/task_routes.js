@@ -1,4 +1,5 @@
 import tasks from './tasks'
+import solvers from './solvers'
 
 export default (ctx) => {
   const { knex, auth, express } = ctx
@@ -19,6 +20,18 @@ export default (ctx) => {
 
   app.put('/:id', auth.required, bodyParser, (req, res, next) => {
     tasks.update(req.params.id, req.body, auth.getUID(req), knex)
+      .then(savedid => res.json(savedid))
+      .catch(next)
+  })
+
+  app.post('/:id/solver', auth.required, bodyParser, (req, res, next) => {
+    solvers.add(req.params.id, req.body, auth.getUID(req), knex)
+      .then(savedid => res.json(savedid))
+      .catch(next)
+  })
+
+  app.put('/:id/solver', auth.required, bodyParser, (req, res, next) => {
+    solvers.change(req.params.id, req.body, auth.getUID(req), knex)
       .then(savedid => res.json(savedid))
       .catch(next)
   })

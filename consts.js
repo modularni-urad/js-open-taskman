@@ -2,7 +2,7 @@
 export const TABLE_NAMES = {
   TASKS: 'taskman_tasks',
   COMMENTS: 'taskman_comments',
-  FILES: 'taskman_files'
+  SOLV_EVENTS: 'taskman_solver_events'
 }
 
 export const PRIORITY = {
@@ -18,4 +18,17 @@ export const STATE = {
   WAIT3PARTY: '3rdP',
   DONE: 'done',
   CLOSED: 'closd'
+}
+
+export const SOLVING_STATE = {
+  PENDING: 'p',
+  WORKING: 'q',
+  DONE: 'd'
+}
+
+export const SOLVEREVENT_TYPE = {
+  PRIO: 'prio',
+  SOLVER: 'solvr',
+  DUE: 'due',
+  STATE: 'state'
 }

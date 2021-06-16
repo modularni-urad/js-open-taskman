@@ -10,20 +10,17 @@ module.exports = (g) => {
   const p = {
     name: 'pok1',
     tags: 'dwarfs',
-    desc: 'pokus',
-    due: new Date()
+    desc: 'pokus'
   }
 
   return describe('tasks', () => {
     //
     it('must not create a new item wihout auth', async () => {
-      g.UID = null
       const res = await r.post('/tasks').send(p)
       res.should.have.status(401)
     })
 
     it('shall create a new item without mandatory item', async () => {
-      g.UID = 100
       const res = await r.post('/tasks').send(_.omit(p, 'name'))
         .set('Authorization', 'Bearer f')
       res.should.have.status(400)
@@ -34,6 +31,7 @@ module.exports = (g) => {
       res.should.have.status(201)
       res.should.have.header('content-type', /^application\/json/)
       p.id = res.body[0]
+      g.task = p
     })
 
     it('shall update the item pok1', async () => {

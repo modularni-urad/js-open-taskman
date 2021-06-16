@@ -1,5 +1,5 @@
 import _ from 'underscore'
-import { TABLE_NAMES, PRIORITY, STATE } from '../consts'
+import { TABLE_NAMES, STATE } from '../consts'
 
 exports.up = (knex, Promise) => {
   return knex.schema.createTable(TABLE_NAMES.TASKS, (table) => {
@@ -7,14 +7,10 @@ exports.up = (knex, Promise) => {
     table.string('name', 64).notNullable()
     table.text('desc').notNullable()
     table.json('tags').notNullable()
-    table.integer('owner').notNullable()
-    table.integer('solver')
+    table.string('owner').notNullable()
+    table.json('solvers').notNullable().defaultTo([])
     table.enum('state', _.values(STATE)).notNullable().defaultTo(STATE.NEW)
-    table.enum('prio', _.values(PRIORITY)).notNullable()
-      .defaultTo(PRIORITY.NORMAL)
-    table.date('due').notNullable()
     table.timestamp('created').notNullable().defaultTo(knex.fn.now())
-    table.timestamp('changed')
   })
 }
 

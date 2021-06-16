@@ -17,15 +17,14 @@ function createComment (taskid, body, UID, knex) {
   })
 }
 
-const editables = ['name', 'tags', 'desc', 'solver', 'state', 'prio', 'due']
+const editables = ['name', 'tags', 'desc']
 
 function update (taskid, body, UID, knex) {
   body = _.pick(body, editables)
   if (!_.isUndefined(body.tags) && !_.isString(body.tags)) {
     body.tags = JSON.stringify(body.tags)
   }
-  const change = Object.assign(body, { changed: new Date() })
-  return knex(TABLE_NAMES.TASKS).where('id', taskid).update(change).returning('*')
+  return knex(TABLE_NAMES.TASKS).where('id', taskid).update(body).returning('*')
 }
 
 function list (query, knex) {
