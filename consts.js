@@ -22,7 +22,7 @@ export const STATE = {
 
 export const SOLVING_STATE = {
   PENDING: 'p',
-  WORKING: 'q',
+  WORKING: 'w',
   DONE: 'd'
 }
 

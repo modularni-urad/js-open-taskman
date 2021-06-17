@@ -10,7 +10,8 @@ export default {
     if (canAdd !== UID.toString()) throw new Error('you cannot add solver')
 
     // prepare change
-    const change = { solvers: _.union(task.solvers, [body]) }
+    const newItem = Object.assign({ state: SOLVING_STATE.PENDING }, body)
+    const change = { solvers: _.union(task.solvers, [newItem]) }
     await knex(TABLE_NAMES.TASKS).where('id', taskid).update(change)
     
     // add events
@@ -23,14 +24,28 @@ export default {
   },
   change: async function (taskid, body, UID, knex) {
     const task = await knex(TABLE_NAMES.TASKS).where('id', taskid).first()
-    if (UID === task.owner) {
+    if (UID.toString() === task.owner) {
       // I can change the bottom of stack, TODO: propagate change to resp. check
       Object.assign(task.solvers[0], body)
       const change = { solvers: task.solvers }
       await knex(TABLE_NAMES.TASKS).where('id', taskid).update(change)
-    } else if (UID === _.last(task.solvers).uid) {
-      // I am current solver, I can modify only status
-
+    } else {
+      const idx = _.findIndex(task.solvers, i => i.uid.toString() === UID.toString())
+      if (idx === task.solvers.length - 1) {
+        // I am current solver, I can modify only status
+        Object.assign(task.solvers[idx], _.pick(body, 'state'))
+        const change = { solvers: task.solvers }
+        await knex(TABLE_NAMES.TASKS).where('id', taskid).update(change)
+      } else if (idx >= 0) {
+        // I am one of manager in stack, I can modify state of my stack item 
+        // or everything except state to item below me
+        Object.assign(task.solvers[idx], body.state)
+        Object.assign(task.solvers[idx + 1], body)
+        const change = { solvers: task.solvers }
+        await knex(TABLE_NAMES.TASKS).where('id', taskid).update(change)
+      } else {
+        throw new Error('you cannot change solver')
+      }
     }
   }
 }
