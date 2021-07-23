@@ -1,6 +1,6 @@
-import Knex from 'knex'
 import _ from 'underscore'
 import { TABLE_NAMES } from '../../consts'
+const Knex = require('knex')
 const knexHooks = require('knex-hooks')
 
 // const rand = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 15)

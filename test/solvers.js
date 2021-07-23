@@ -18,21 +18,21 @@ module.exports = (g) => {
     //
     it('must not create a new solver coz we are not owner', async () => {
       g.mockUser.id = 100
-      const res = await r.post(`/tasks/${g.task.id}/solver`).send(p)
+      const res = await r.post(`/${g.task.id}/solver`).send(p)
         .set('Authorization', 'Bearer f')
       res.should.have.status(400)
     })
 
     it('shall create a new solver coz we are the owner', async () => {
       g.mockUser.id = 42
-      const res = await r.post(`/tasks/${g.task.id}/solver`).send(p)
+      const res = await r.post(`/${g.task.id}/solver`).send(p)
         .set('Authorization', 'Bearer f')
       res.should.have.status(200)
     })
 
     it('shall update my resp.stack item', async () => {
       g.mockUser.id = 42
-      const res = await r.put(`/tasks/${g.task.id}/solver`).send({ uid: 110 })
+      const res = await r.put(`/${g.task.id}/solver`).send({ uid: 110 })
         .set('Authorization', 'Bearer f')
       res.should.have.status(200)
     })
@@ -40,7 +40,7 @@ module.exports = (g) => {
     it('shall update my resp.stack item as user 110', async () => {
       g.mockUser.id = 110
       const change = { state: SOLVING_STATE.WORKING }
-      const res = await r.put(`/tasks/${g.task.id}/solver`).send(change)
+      const res = await r.put(`/${g.task.id}/solver`).send(change)
         .set('Authorization', 'Bearer f')
       res.should.have.status(200)
     })

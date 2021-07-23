@@ -1,3 +1,4 @@
+export const MULTITENANT = process.env.MULTITENANT || true
 
 export const TABLE_NAMES = {
   TASKS: 'taskman_tasks',

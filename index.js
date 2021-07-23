@@ -6,22 +6,19 @@ import {
   required, requireMembership, isMember, getUID 
 } from 'modularni-urad-utils/auth'
 import initDB from 'modularni-urad-utils/db'
-import initTaskRoutes from './api/task_routes'
-import initTagRoutes from './api/tags'
+import initRoutes from './api/routes'
 
 export default async function init (mocks = null) {
-  attachPaginate()
   const migrationsDir = path.join(__dirname, 'migrations')
   const knex = mocks
     ? await mocks.dbinit(migrationsDir)
     : await initDB(migrationsDir)
+  attachPaginate()
 
-  const app = express()
   const auth = { required, requireMembership, isMember, getUID }
   const appContext = { express, knex, auth }
 
-  app.use('/tasks', initTaskRoutes(appContext))
-  app.use('/tags', initTagRoutes(appContext))
+  const app = initRoutes(appContext)
 
   initErrorHandlers(app) // ERROR HANDLING
 

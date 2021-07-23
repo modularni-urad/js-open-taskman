@@ -1,9 +1,10 @@
 import _ from 'underscore'
-import { TABLE_NAMES, STATE } from '../consts'
+import { MULTITENANT, TABLE_NAMES, STATE } from '../consts'
 
 exports.up = (knex, Promise) => {
   return knex.schema.createTable(TABLE_NAMES.TASKS, (table) => {
     table.increments('id').primary()
+    MULTITENANT && table.integer('orgid').notNullable()
     table.string('name', 64).notNullable()
     table.text('desc').notNullable()
     table.json('tags').notNullable()

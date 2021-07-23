@@ -37,7 +37,7 @@ describe('app', () => {
     const submodules = [
       './tasks',
       './solvers',
-      './tags'
+      // './tags'
     ]
     submodules.map((i) => {
       const subMod = require(i)
