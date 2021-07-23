@@ -16,6 +16,7 @@ export default (knex) => ({
       .catch(next)
   },
   list: (req, res, next) => {
+    req.query.filter = req.query.filter ? JSON.parse(req.query.filter) : {}
     Object.assign(req.query.filter, { taskid: req.params.id })
     entity.list(req.query, conf, knex)
       .then(data => res.json(data))
