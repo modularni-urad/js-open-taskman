@@ -22,8 +22,8 @@ export default {
       author: UID
     })
   },
-  acceptDelegation: async function (task, newstate, body, UID, knex) {
-    if (task.state !== STATE.DELEG_REQ) {
+  beginWork: async function (task, newstate, body, UID, knex) {
+    if (!_.contains([STATE.ERROR, STATE.DELEG_REQ], task.state)) {
       throw new Error(_invalidTransitionMsg(task, newstate))
     }
     if (_.last(task.solvers) !== UID) {
@@ -44,7 +44,7 @@ export default {
     if (task.solver !== UID) {
       throw new Error('you are not the solver')
     }
-    await knex(TABLE_NAMES.TASKS).where('id', taskid).update({ state: newstate })
+    await knex(TABLE_NAMES.TASKS).where('id', task.id).update({ state: newstate })
   },
   rejectDone: async function (task, newstate, body, UID, knex) {
     if (task.state !== STATE.FINISHED) {
@@ -53,7 +53,7 @@ export default {
     if (UID !== task.manager) {
       throw new Error('you are not task manager')
     }
-    await knex(TABLE_NAMES.TASKS).where('id', taskid).update({ state: newstate })
+    await knex(TABLE_NAMES.TASKS).where('id', task.id).update({ state: newstate })
   },
   approveDone: async function (task, newstate, body, UID, knex) {
     if (task.state !== STATE.FINISHED) {
@@ -63,7 +63,7 @@ export default {
       throw new Error('you are not task manager')
     }
     task.solvers.pop()
-    await knex(TABLE_NAMES.TASKS).where('id', taskid).update({ 
+    await knex(TABLE_NAMES.TASKS).where('id', task.id).update({ 
       state: task.solvers.length > 0 ? STATE.FINISHED : newstate,
       solvers: task.solvers
     })
@@ -76,7 +76,7 @@ export default {
     if (UID !== task.owner) {
       throw new Error('you are not task owner')
     }
-    await knex(TABLE_NAMES.TASKS).where('id', taskid).update({ state: newstate })
+    await knex(TABLE_NAMES.TASKS).where('id', task.id).update({ state: newstate })
   },
   defaultCase: function (task, newstate, body, UID, knex) {
     throw new Error(_invalidTransitionMsg(task, newstate))

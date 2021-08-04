@@ -41,6 +41,13 @@ module.exports = (g) => {
       res.should.have.status(200)
     })
 
+    it('must not finish task coz it is not in INPROGRESS state', async () => {
+      g.mockUser.id = 42
+      const res = await r.put(`/${g.task.id}/state/${STATE.FINISHED}`)
+        .set('Authorization', 'Bearer f')
+      res.should.have.status(400)
+    })
+
     it('shall create new delegate', async () => {
       g.mockUser.id = 42
       const res = await r.post(`/${g.task.id}/delegation/300`)
@@ -51,6 +58,61 @@ module.exports = (g) => {
     it('shall accept delegation', async () => {
       g.mockUser.id = 300
       const res = await r.put(`/${g.task.id}/state/${STATE.INPROGRESS}`)
+        .set('Authorization', 'Bearer f')
+      res.should.have.status(200)
+    })
+
+    it('must not finish task coz i am not the solver', async () => {
+      g.mockUser.id = 200
+      const res = await r.put(`/${g.task.id}/state/${STATE.FINISHED}`)
+        .set('Authorization', 'Bearer f')
+      res.should.have.status(400)
+    })
+
+    it('shall finish task', async () => {
+      g.mockUser.id = 300
+      const res = await r.put(`/${g.task.id}/state/${STATE.FINISHED}`)
+        .set('Authorization', 'Bearer f')
+      res.should.have.status(200)
+    })
+
+    it('must not refuse finish of task coz not manager', async () => {
+      const res = await r.put(`/${g.task.id}/state/${STATE.ERROR}`)
+        .set('Authorization', 'Bearer f')
+      res.should.have.status(400)
+    })
+
+    it('shall refuse finish of task', async () => {
+      g.mockUser.id = 42
+      const res = await r.put(`/${g.task.id}/state/${STATE.ERROR}`)
+        .set('Authorization', 'Bearer f')
+      res.should.have.status(200)
+    })
+
+    it('shall accept refusal', async () => {
+      g.mockUser.id = 300
+      const res = await r.put(`/${g.task.id}/state/${STATE.INPROGRESS}`)
+        .set('Authorization', 'Bearer f')
+      res.should.have.status(200)
+    })
+
+    it('must not refuse finish of task, coz sover has not finished', async () => {
+      g.mockUser.id = 42
+      const res = await r.put(`/${g.task.id}/state/${STATE.ERROR}`)
+        .set('Authorization', 'Bearer f')
+      res.should.have.status(400)
+    })
+
+    it('shall finish task', async () => {
+      g.mockUser.id = 300
+      const res = await r.put(`/${g.task.id}/state/${STATE.FINISHED}`)
+        .set('Authorization', 'Bearer f')
+      res.should.have.status(200)
+    })
+
+    it('shall accept finish of task', async () => {
+      g.mockUser.id = 42
+      const res = await r.put(`/${g.task.id}/state/${STATE.DONE}`)
         .set('Authorization', 'Bearer f')
       res.should.have.status(200)
     })

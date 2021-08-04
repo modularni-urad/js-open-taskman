@@ -25,7 +25,7 @@ async function changeState (taskid, newstate, body, UID, knex) {
     case STATE.DELEG_REFUSED:
       return lifecycle.refuseDelegation(task, newstate, body, UID, knex)
     case STATE.INPROGRESS:
-      return lifecycle.acceptDelegation(task, newstate, body, UID, knex)
+      return lifecycle.beginWork(task, newstate, body, UID, knex)
     case STATE.FINISHED:
       return lifecycle.setFinished(task, newstate, body, UID, knex)
     case STATE.ERROR:
