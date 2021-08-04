@@ -19,6 +19,20 @@ module.exports = (g) => {
 
     it('shall create delegate', async () => {
       g.mockUser.id = 42
+      const res = await r.post(`/${g.task.id}/delegation/150`)
+        .set('Authorization', 'Bearer f')
+      res.should.have.status(200)
+      // TODO: check status
+    })
+
+    it('shall accept delegation', async () => {
+      g.mockUser.id = 150
+      const res = await r.put(`/${g.task.id}/state/${STATE.INPROGRESS}`)
+        .set('Authorization', 'Bearer f')
+      res.should.have.status(200)
+    })
+
+    it('shall create delegate', async () => {
       const res = await r.post(`/${g.task.id}/delegation/200`)
         .set('Authorization', 'Bearer f')
       res.should.have.status(200)
@@ -77,13 +91,14 @@ module.exports = (g) => {
     })
 
     it('must not refuse finish of task coz not manager', async () => {
+      g.mockUser.id = 42
       const res = await r.put(`/${g.task.id}/state/${STATE.ERROR}`)
         .set('Authorization', 'Bearer f')
       res.should.have.status(400)
     })
 
     it('shall refuse finish of task', async () => {
-      g.mockUser.id = 42
+      g.mockUser.id = 150
       const res = await r.put(`/${g.task.id}/state/${STATE.ERROR}`)
         .set('Authorization', 'Bearer f')
       res.should.have.status(200)
@@ -111,8 +126,36 @@ module.exports = (g) => {
     })
 
     it('shall accept finish of task', async () => {
+      g.mockUser.id = 150
+      const res = await r.put(`/${g.task.id}/state/${STATE.DONE}`)
+        .set('Authorization', 'Bearer f')
+      res.should.have.status(200)
+    })
+
+    it('must not accept finish of task coz not manager anymore', async () => {
+      g.mockUser.id = 150
+      const res = await r.put(`/${g.task.id}/state/${STATE.DONE}`)
+        .set('Authorization', 'Bearer f')
+      res.should.have.status(400)
+    })
+
+    it('shall accept finish of task', async () => {
       g.mockUser.id = 42
       const res = await r.put(`/${g.task.id}/state/${STATE.DONE}`)
+        .set('Authorization', 'Bearer f')
+      res.should.have.status(200)
+    })
+
+    it('must not close the task coz not owner', async () => {
+      g.mockUser.id = 150
+      const res = await r.put(`/${g.task.id}/state/${STATE.CLOSED}`)
+        .set('Authorization', 'Bearer f')
+      res.should.have.status(400)
+    })
+
+    it('shall close the task', async () => {
+      g.mockUser.id = 42
+      const res = await r.put(`/${g.task.id}/state/${STATE.CLOSED}`)
         .set('Authorization', 'Bearer f')
       res.should.have.status(200)
     })

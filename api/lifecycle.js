@@ -65,9 +65,17 @@ export default {
     task.solvers.pop()
     await knex(TABLE_NAMES.TASKS).where('id', task.id).update({ 
       state: task.solvers.length > 0 ? STATE.FINISHED : newstate,
-      solvers: task.solvers
+      solvers: task.solvers,
+      solver: task.manager,
+      manager: task.solvers.length > 1 
+        ? task.solvers[task.solvers.length - 2] 
+        : task.owner
     })
-    // TODO: pridat comment, ze sem to approvenul?
+    await knex(TABLE_NAMES.COMMENTS).insert({
+      taskid: task.id,
+      content: `APPROVED`,
+      author: UID
+    })
   },
   closeTask: async function (task, newstate, body, UID, knex) {
     if (task.state !== STATE.DONE) {
