@@ -2,8 +2,7 @@ export const MULTITENANT = process.env.MULTITENANT || true
 
 export const TABLE_NAMES = {
   TASKS: 'taskman_tasks',
-  COMMENTS: 'taskman_comments',
-  SOLV_EVENTS: 'taskman_solver_events'
+  COMMENTS: 'taskman_comments'
 }
 
 export const PRIORITY = {
@@ -15,21 +14,11 @@ export const PRIORITY = {
 
 export const STATE = {
   NEW: 'new',
+  DELEG_REQ: 'dlgt',
+  DELEG_REFUSED: 'refd',
   INPROGRESS: 'prog',
-  WAIT3PARTY: '3rdP',
+  FINISHED: 'fini',
   DONE: 'done',
-  CLOSED: 'closd'
-}
-
-export const SOLVING_STATE = {
-  PENDING: 'p',
-  WORKING: 'w',
-  DONE: 'd'
-}
-
-export const SOLVEREVENT_TYPE = {
-  PRIO: 'prio',
-  SOLVER: 'solvr',
-  DUE: 'due',
-  STATE: 'state'
+  ERROR: 'err',
+  CLOSED: 'clsd'
 }

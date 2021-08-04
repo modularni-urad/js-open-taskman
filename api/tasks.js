@@ -3,7 +3,7 @@ import { TABLE_NAMES, MULTITENANT } from '../consts'
 import entity from 'entity-api-base'
 const conf = {
   tablename: TABLE_NAMES.TASKS,
-  editables: ['name', 'tags', 'desc']
+  editables: ['name', 'tags', 'desc', 'prio', 'due']
 }
 
 function _getOrgId (req) {

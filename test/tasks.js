@@ -1,5 +1,7 @@
 /* global describe it */
+import moment from 'moment'
 import _ from 'underscore'
+import { PRIORITY } from '../consts'
 const chai = require('chai')
 chai.should()
 
@@ -10,7 +12,9 @@ module.exports = (g) => {
   const p = {
     name: 'pok1',
     tags: ['dwarfs'],
-    desc: 'pokus'
+    desc: 'pokus',
+    prio: PRIORITY.LOW,
+    due: moment().add(20, 'days')
   }
 
   return describe('tasks', () => {

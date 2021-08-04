@@ -18,8 +18,8 @@ export default (ctx) => {
   app.post('/:id/comments', auth.required, bodyParser, comments.create)
   app.get('/:id/comments', comments.list)
 
-  app.post('/:id/solver', auth.required, bodyParser, solvers.add)
-  app.put('/:id/solver', auth.required, bodyParser, solvers.change)
+  app.post('/:id/delegation/:uid', auth.required, solvers.delegate)
+  app.put('/:id/state/:state', auth.required, bodyParser, solvers.state)
 
   return app
 }

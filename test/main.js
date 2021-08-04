@@ -24,8 +24,8 @@ describe('app', () => {
   describe('API', () => {
     const submodules = [
       './tasks',
-      './solvers',
-      './comments'
+      './comments',
+      './solvers'
     ]
     submodules.map((i) => {
       const subMod = require(i)

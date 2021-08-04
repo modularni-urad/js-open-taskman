@@ -14,15 +14,22 @@ a zmena se notifikuje dolu ve stacku.
 
 solvers je JSON field = zasobnik, ktery obsahuje:
 - idResitele
-- status: pending, working, done
-- duedate: deadline
-- prio: priorita pro daneho resitele
+
+status, duedate, prio nastavuje pouze owner.
 
 ### aktualni resitel - vrchol stacku
-- Muze nastavit status sveho stacku:
-  - pending => working: beru na vedomi, zacinam pracovat
-  - working => done: mam hotovo
-- Pridat do stacku dalsiho resitele, ale prebira zodpovednost za management toho ukolu a jeho vysledky do DL (+novy musi zase potvrdit)
+- Pridat do stacku dalsiho resitele - delegovat, ale prebira zodpovednost 
+za management toho ukolu a jeho vysledky do DL (+novy musi zase potvrdit)
+
+## lifecycle
+
+NEW
+  DELEG_REQ: 'dlgt',
+  DELEG_REFUSED: 'refd',
+  INPROGRESS: 'prog',
+  DONE: 'done',
+  ERROR: 'err',
+  CLOSED: 'clsd'
 
 ---
 
