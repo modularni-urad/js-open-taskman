@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "entity-api-base": "github:modularni-urad/entity-api-base",
+    "entity-api-base": "^0.1.0",
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "knex": "^0.21.16",
