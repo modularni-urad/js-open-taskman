@@ -15,10 +15,13 @@ export default {
       throw new Error('you are not the pender')
     }
     task.solvers.pop()
-    await knex(TABLE_NAMES.TASKS).where('id', task.id).update({ solvers: task.solvers })
+    await knex(TABLE_NAMES.TASKS).where('id', task.id).update({ 
+      state: newstate,
+      solvers: task.solvers
+    })
     await knex(TABLE_NAMES.COMMENTS).insert({
       taskid: task.id,
-      content: body.message,
+      content: 'REFUSED:' + body.message,
       author: UID
     })
   },
@@ -36,6 +39,11 @@ export default {
         ? task.solvers[task.solvers.length - 2] 
         : task.owner
     })
+    await knex(TABLE_NAMES.COMMENTS).insert({
+      taskid: task.id,
+      content: 'ACCEPTED',
+      author: UID
+    })
   },
   setFinished: async function (task, newstate, body, UID, knex) {
     if (task.state !== STATE.INPROGRESS) {
@@ -45,6 +53,11 @@ export default {
       throw new Error('you are not the solver')
     }
     await knex(TABLE_NAMES.TASKS).where('id', task.id).update({ state: newstate })
+    await knex(TABLE_NAMES.COMMENTS).insert({
+      taskid: task.id,
+      content: 'FINISHED',
+      author: UID
+    })
   },
   rejectDone: async function (task, newstate, body, UID, knex) {
     if (task.state !== STATE.FINISHED) {
