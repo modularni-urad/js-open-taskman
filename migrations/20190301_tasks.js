@@ -7,7 +7,7 @@ exports.up = (knex, Promise) => {
     MULTITENANT && table.integer('orgid').notNullable()
     table.string('name', 64).notNullable()
     table.text('desc').notNullable()
-    table.json('tags').notNullable()
+    table.string('tags').notNullable()
     table.string('owner').notNullable()
     table.string('manager')
     table.string('solver')
