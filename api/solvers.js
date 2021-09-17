@@ -9,7 +9,7 @@ async function delegate (taskid, toUID, UID, knex) {
   }
   await knex(TABLE_NAMES.TASKS).where('id', taskid).update({
     state: STATE.DELEG_REQ,
-    solvers: _.union(task.solvers, [toUID])
+    solvers: JSON.stringify(_.union(task.solvers, [toUID]))
   })
   // write comment
   await knex(TABLE_NAMES.COMMENTS).insert({
