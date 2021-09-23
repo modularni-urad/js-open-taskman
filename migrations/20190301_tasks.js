@@ -11,7 +11,7 @@ exports.up = (knex, Promise) => {
     table.string('owner').notNullable()
     table.string('manager')
     table.string('solver')
-    table.json('solvers').notNullable().defaultTo([])
+    table.string('solvers')
     table.enum('state', _.values(STATE)).notNullable().defaultTo(STATE.NEW)
     table.enum('prio', _.values(PRIORITY)).notNullable().defaultTo(PRIORITY.NORMAL)
     table.date('due')

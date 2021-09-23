@@ -10,14 +10,15 @@ export default {
     if (task.state !== STATE.DELEG_REQ) {
       throw new Error(_invalidTransitionMsg(task, newstate))
     }
-    const pendingUID = _.last(task.solvers)
+    const solvers = task.solvers.split(',')
+    const pendingUID = _.last(solvers)
     if (pendingUID !== UID) {
       throw new Error('you are not the pender')
     }
-    task.solvers.pop()
+    solvers.pop()
     const updated = await knex(TABLE_NAMES.TASKS).where('id', task.id).update({ 
       state: newstate,
-      solvers: task.solvers
+      solvers: solvers.join(',')
     }).returning('*')
     await knex(TABLE_NAMES.COMMENTS).insert({
       taskid: task.id,
@@ -30,14 +31,15 @@ export default {
     if (!_.contains([STATE.ERROR, STATE.DELEG_REQ], task.state)) {
       throw new Error(_invalidTransitionMsg(task, newstate))
     }
-    if (_.last(task.solvers) !== UID) {
+    const solvers = task.solvers.split(',')
+    if (_.last(solvers) !== UID) {
       throw new Error('you are not the pender')
     }
     const updated = await knex(TABLE_NAMES.TASKS).where('id', task.id).update({ 
       state: newstate,
       solver: UID,
-      manager: task.solvers.length > 1 
-        ? task.solvers[task.solvers.length - 2] 
+      manager: solvers.length > 1 
+        ? solvers[solvers.length - 2] 
         : task.owner
     }).returning('*')
     await knex(TABLE_NAMES.COMMENTS).insert({
@@ -80,14 +82,13 @@ export default {
     if (UID !== task.manager) {
       throw new Error('you are not task manager')
     }
-    task.solvers.pop()
+    const solvers = task.solvers.split(',')
+    solvers.pop()
     const updated = await knex(TABLE_NAMES.TASKS).where('id', task.id).update({ 
-      state: task.solvers.length > 0 ? STATE.FINISHED : newstate,
-      solvers: task.solvers,
+      state: solvers.length > 0 ? STATE.FINISHED : newstate,
+      solvers: solvers.join(','),
       solver: task.manager,
-      manager: task.solvers.length > 1 
-        ? task.solvers[task.solvers.length - 2] 
-        : task.owner
+      manager: solvers.length > 1 ? solvers[solvers.length - 2] : task.owner
     }).returning('*')
     await knex(TABLE_NAMES.COMMENTS).insert({
       taskid: task.id,

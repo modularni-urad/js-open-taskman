@@ -15,7 +15,7 @@ module.exports = (g) => {
     //
     it('must not create a new item wihout auth', async () => {
       const res = await r.post('/1/comments').send(p)
-      res.should.have.status(401)
+      res.should.have.status(400)
     })
 
     it('shall create a new item without mandatory item', async () => {

@@ -11,7 +11,7 @@ module.exports = (g) => {
 
   const p = {
     name: 'pok1',
-    tags: ['dwarfs'],
+    tags: 'dwarfs',
     desc: 'pokus',
     prio: PRIORITY.LOW,
     due: moment().add(20, 'days')
@@ -21,7 +21,7 @@ module.exports = (g) => {
     //
     it('must not create a new item wihout auth', async () => {
       const res = await r.post('/').send(p)
-      res.should.have.status(401)
+      res.should.have.status(400)
     })
 
     it('shall create a new item without mandatory item', async () => {
