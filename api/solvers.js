@@ -7,9 +7,10 @@ async function delegate (taskid, toUID, UID, knex) {
   if (!_.contains([task.owner, task.solver], UID)) {
     throw new Error('you cannot delegate')
   }
+  const solvers = task.solvers ? task.solvers.split(',') : []
   const updated = await knex(TABLE_NAMES.TASKS).where('id', taskid).update({
     state: STATE.DELEG_REQ,
-    solvers: `${task.solvers},${toUID}`
+    solvers: _.union(solvers, [toUID]).join(',')
   }).returning('*')
   // write comment
   await knex(TABLE_NAMES.COMMENTS).insert({
