@@ -46,6 +46,16 @@ module.exports = (g) => {
       res.should.have.status(200)
     })
 
+    it('shall update the item pok1', async () => {
+      g.mockUser.id = 200
+      const change = {
+        name: 'pok1changed again'
+      }
+      const res = await r.put(`/${p.id}`).send(change).set('Authorization', 'Bearer f')
+      res.should.have.status(400)
+      g.mockUser.id = 42
+    })
+
     it('shall get the pok1', async () => {
       const res = await r.get('/').query({ filter: JSON.stringify({ id: p.id }) })
       res.body.length.should.eql(1)
