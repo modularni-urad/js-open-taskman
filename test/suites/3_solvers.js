@@ -1,12 +1,7 @@
-/* global describe it */
-import _ from 'underscore'
-import { STATE } from '../consts'
-const chai = require('chai')
-chai.should()
+import { STATE } from '../../consts'
 
 module.exports = (g) => {
-  //
-  const r = chai.request(g.baseurl)
+  const r = g.chai.request(g.baseurl)
 
   return describe('tasks', () => {
     //

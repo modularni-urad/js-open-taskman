@@ -1,13 +1,11 @@
 /* global describe it */
-import moment from 'moment'
-import _ from 'underscore'
-import { PRIORITY } from '../consts'
-const chai = require('chai')
-chai.should()
+import { PRIORITY } from '../../consts'
 
 module.exports = (g) => {
-  //
-  const r = chai.request(g.baseurl)
+  const _ = g.require('underscore')
+  const moment = g.require('moment')
+  g.chai.should()
+  const r = g.chai.request(g.baseurl)
 
   const p = {
     name: 'pok1',
@@ -21,7 +19,7 @@ module.exports = (g) => {
     //
     it('must not create a new item wihout auth', async () => {
       const res = await r.post('/').send(p)
-      res.should.have.status(400)
+      res.should.have.status(401)
     })
 
     it('shall create a new item without mandatory item', async () => {

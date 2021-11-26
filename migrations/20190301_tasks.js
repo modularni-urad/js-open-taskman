@@ -1,10 +1,18 @@
 import _ from 'underscore'
-import { MULTITENANT, TABLE_NAMES, STATE, PRIORITY } from '../consts'
+import { TABLE_NAMES, STATE, PRIORITY } from '../consts'
+
+function tableName (tname) {
+  return process.env.CUSTOM_MIGRATION_SCHEMA 
+    ? `${process.env.CUSTOM_MIGRATION_SCHEMA}.${tname}`
+    : tname
+}
 
 exports.up = (knex, Promise) => {
-  return knex.schema.createTable(TABLE_NAMES.TASKS, (table) => {
+  const builder = process.env.CUSTOM_MIGRATION_SCHEMA
+    ? knex.schema.withSchema(process.env.CUSTOM_MIGRATION_SCHEMA)
+    : knex.schema
+  return builder.createTable(TABLE_NAMES.TASKS, (table) => {
     table.increments('id').primary()
-    MULTITENANT && table.integer('orgid').notNullable()
     table.string('name', 64).notNullable()
     table.text('desc').notNullable()
     table.string('tags').notNullable()
@@ -20,5 +28,8 @@ exports.up = (knex, Promise) => {
 }
 
 exports.down = (knex, Promise) => {
-  return knex.schema.dropTable(TABLE_NAMES.TASKS)
+  const builder = process.env.CUSTOM_MIGRATION_SCHEMA
+    ? knex.schema.withSchema(process.env.CUSTOM_MIGRATION_SCHEMA)
+    : knex.schema
+  return builder.dropTable(TABLE_NAMES.TASKS)
 }

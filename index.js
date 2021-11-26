@@ -1,26 +1,23 @@
 import path from 'path'
-import express from 'express'
-import { attachPaginate } from 'knex-paginate'
-import initErrorHandlers from 'modularni-urad-utils/error_handlers'
-import { 
-  required, requireMembership, isMember, getUID 
-} from 'modularni-urad-utils/auth'
-import initDB from 'modularni-urad-utils/db'
-import initRoutes from './api/routes'
+import initApi from './api/routes'
 
-export default async function init (mocks = null) {
-  const migrationsDir = path.join(__dirname, 'migrations')
-  const knex = mocks
-    ? await mocks.dbinit(migrationsDir)
-    : await initDB(migrationsDir)
-  attachPaginate()
-
-  const auth = { required, requireMembership, isMember, getUID }
-  const appContext = { express, knex, auth }
-
-  const app = initRoutes(appContext)
-
-  initErrorHandlers(app) // ERROR HANDLING
-
-  return app
+export async function migrateDB (knex, schemas = null) {
+  const opts = {
+    directory: path.join(__dirname, 'migrations')
+  }
+  async function migrate2schema(schemaName) {
+    console.log(`----- migration to schema ${schemaName} start ------`)
+    await knex.raw(`CREATE SCHEMA IF NOT EXISTS "${schemaName}"`)
+    const o = Object.assign({}, opts, { schemaName })
+    process.env.CUSTOM_MIGRATION_SCHEMA = schemaName
+    await knex.migrate.latest(o)
+    console.log(`----- migration to schema ${schemaName} ended ------`)
+  }
+  return schemas
+    ? schemas.reduce((p, schema) => {
+        return p.then(() => migrate2schema(schema))
+      }, Promise.resolve())
+    : knex.migrate.latest(opts)
 }
+
+export const init = initApi

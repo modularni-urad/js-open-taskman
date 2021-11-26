@@ -1,10 +1,20 @@
 import { TABLE_NAMES } from '../consts'
 
+function tableName (tname) {
+  return process.env.CUSTOM_MIGRATION_SCHEMA 
+    ? `${process.env.CUSTOM_MIGRATION_SCHEMA}.${tname}`
+    : tname
+}
+
 exports.up = (knex, Promise) => {
-  return knex.schema.createTable(TABLE_NAMES.COMMENTS, (table) => {
+  const builder = process.env.CUSTOM_MIGRATION_SCHEMA
+    ? knex.schema.withSchema(process.env.CUSTOM_MIGRATION_SCHEMA)
+    : knex.schema
+  
+  return knex.schema.createTable(tableName(TABLE_NAMES.COMMENTS), (table) => {
     table.increments('id').primary()
     table.integer('taskid').notNullable()
-      .references('id').inTable(TABLE_NAMES.TASKS)
+      .references('id').inTable(tableName(TABLE_NAMES.TASKS))
     table.text('content').notNullable()
     table.string('author', 64).notNullable()
     table.timestamp('created').notNullable().defaultTo(knex.fn.now())
@@ -12,5 +22,8 @@ exports.up = (knex, Promise) => {
 }
 
 exports.down = (knex, Promise) => {
-  return knex.schema.dropTable(TABLE_NAMES.COMMENTS)
+  const builder = process.env.CUSTOM_MIGRATION_SCHEMA
+    ? knex.schema.withSchema(process.env.CUSTOM_MIGRATION_SCHEMA)
+    : knex.schema
+  return builder.dropTable(TABLE_NAMES.COMMENTS)
 }

@@ -1,31 +1,23 @@
-/* global describe before after */
 import chai from 'chai'
+
 const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 
-const g = require('./env/init')
+const g = { chai }
+require('./env/init')(g)
 
 describe('app', () => {
-  before(done => {
+  before(() => {
     const InitModule = require('../index')
-    g.InitApp(InitModule.default).then(app => {
-      g.server = app.listen(g.port, '127.0.0.1', (err) => {
-        if (err) return done(err)
-        done()
-      })
-    }).catch(done)
+    return g.InitApp(InitModule)
   })
-  after(done => {
-    g.server.close()
-    g.close()
-    done()
-  })
+  after(g.close)
 
-  describe('API', () => {
+  return describe('taskman API', async () => {
     const submodules = [
-      './tasks',
-      './comments',
-      './solvers'
+      './suites/1_tasks',
+      './suites/2_comments',
+      './suites/3_solvers'
     ]
     submodules.map((i) => {
       const subMod = require(i)

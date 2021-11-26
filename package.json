@@ -1,12 +1,12 @@
 {
   "name": "modularni-urad-taskman",
   "description": "task manager api",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "scripts": {
     "start": "node -r esm server.js",
     "startdbg": "node -r esm --inspect-brk server.js",
     "test": "mocha -r esm --exit './test/main.js'",
-    "testdbg": "mocha -r esm --inspect-brk './test/main.js'"
+    "testdbg": "mocha -r esm --inspect './test/main.js'"
   },
   "keywords": [],
   "author": {
@@ -18,24 +18,21 @@
     "npm": ">=6.x"
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "entity-api-base": "^0.1.0",
-    "esm": "^3.2.25",
-    "express": "^4.17.1",
-    "knex": "^0.21.16",
-    "knex-paginate": "^1.2.1",
-    "modularni-urad-utils": "1.2.1",
-    "pg": "^8.6.0",
+    "entity-api-base": "modularni-urad/entity-api-base",
     "underscore": "^1.13.1"
   },
   "devDependencies": {
+    "axios": "^0.24.0",
     "chai": "^4.1.2",
     "chai-http": "^4.2.0",
     "esm": "^3.0.84",
     "expect": "^1.20.2",
+    "express": "^4.17.1",
     "jsdom": "^9.8.0",
-    "knex-hooks": "0.0.9",
+    "knex": "^0.95.0",
+    "knex-paginate": "^3",
     "mocha": "^8.0.1",
+    "modularni-urad-utils": "modularni-urad/utils",
     "moment": "^2.29.1",
     "sqlite3": "^4.2.0"
   },

@@ -1,25 +1,31 @@
-import { MULTITENANT } from '../consts'
 import Tasks from './tasks'
 import Comments from './comments'
 import Solvers from './solvers'
 
 export default (ctx) => {
-  const { knex, auth, express } = ctx
-  const app = express()
-  const bodyParser = express.json()
-  const tasks = Tasks(knex)
-  const comments = Comments(knex)
-  const solvers = Solvers(knex)
+  const { auth, express, bodyParser, knex, ErrorClass } = ctx
+  const { required, session } = auth
+  const api = express()
+  const taskMW = Tasks(knex, ErrorClass)
+  const commetsMW = Comments(knex, ErrorClass)
+  const solversMW = Solvers(knex, ErrorClass)
 
-  app.post('/', auth.required, bodyParser, tasks.checkData, tasks.create)
-  app.put('/:id', auth.required, bodyParser, tasks.checkData, tasks.update)
-  app.get('/', tasks.list)
+  api.post('/', session, required, bodyParser, taskMW.checkData, taskMW.create)
+  api.put('/:id', session, required, bodyParser, taskMW.checkData, taskMW.update)
+  api.get('/', taskMW.list)
 
-  app.post('/:id/comments', auth.required, bodyParser, comments.create)
-  app.get('/:id/comments', comments.list)
+  api.post('/:id/comments', session, required, bodyParser, commetsMW.create)
+  api.get('/:id/comments', commetsMW.list)
 
-  app.post('/:id/delegation/:uid', auth.required, solvers.delegate)
-  app.put('/:id/state/:state', auth.required, bodyParser, solvers.state)
-
-  return app
+  api.post('/:id/delegation/:uid', session, required, (req, res, next) => {
+    solversMW.delegate(req.params.id, req.params.uid, req.user.id.toString(), req.schema)
+      .then(saved => res.json(saved))
+      .catch(next)
+  })
+  api.put('/:id/state/:state', session, required, bodyParser, (req, res, next) => {
+    solversMW.changeState(req.params.id, req.params.state, req.body, req.user.id.toString(), req.schema)
+      .then(saved => res.json(saved))
+      .catch(next)
+  })
+  return api
 }

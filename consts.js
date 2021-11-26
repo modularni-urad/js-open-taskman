@@ -1,5 +1,3 @@
-export const MULTITENANT = process.env.MULTITENANT || true
-
 export const TABLE_NAMES = {
   TASKS: 'taskman_tasks',
   COMMENTS: 'taskman_comments'
@@ -21,4 +19,10 @@ export const STATE = {
   DONE: 'done',
   ERROR: 'err',
   CLOSED: 'clsd'
+}
+
+export function getQB (knex, tablename, schema) {
+  return schema
+    ? knex(knex.ref(tablename).withSchema(schema))
+    : knex(tablename)
 }
