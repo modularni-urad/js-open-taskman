@@ -11,7 +11,7 @@ export default (knex, ErrorClass) => {
   const MW = EntityMarez(conf, knex, ErrorClass)
   return {
     create: (req, res, next) => {
-      // TODO: check if I can and the task is our org
+      // TODO: check if I can
       Object.assign(req.body, { author: req.user.id, taskid: req.params.id })
       MW.create(req.body, req.schema)
         .then(saved => res.status(201).json(saved))

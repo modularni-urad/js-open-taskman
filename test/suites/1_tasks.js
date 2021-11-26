@@ -32,8 +32,15 @@ module.exports = (g) => {
       const res = await r.post('/').send(p).set('Authorization', 'Bearer f')
       res.should.have.status(201)
       res.should.have.header('content-type', /^application\/json/)
-      p.id = res.body[0]
-      g.task = p
+    })
+
+    it('shall get the pok1', async () => {
+      const res = await r.get('/').query({ filter: JSON.stringify({ id: p.id }) })
+      res.body.length.should.eql(1)
+      res.body[0].name.should.eql(p.name)
+      res.should.have.status(200)
+      g.task = res.body[0]
+      p.id = g.task.id      
     })
 
     it('shall update the item pok1', async () => {
@@ -54,17 +61,10 @@ module.exports = (g) => {
       g.mockUser.id = 42
     })
 
-    it('shall get the pok1', async () => {
-      const res = await r.get('/').query({ filter: JSON.stringify({ id: p.id }) })
-      res.body.length.should.eql(1)
-      res.body[0].name.should.eql('pok1changed')
-      res.should.have.status(200)
-    })
-
     it('shall list with paginate', async () => {
       const res = await r.get('/').query({ currentPage: 1, perPage: 2 })
-      // res.body.length.should.eql(1)
-      // res.body[0].name.should.eql('pok1changed')
+      res.body.data.length.should.eql(1)
+      res.body.data[0].name.should.eql('pok1changed')
       res.should.have.status(200)
     })
   })
