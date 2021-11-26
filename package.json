@@ -18,7 +18,7 @@
     "npm": ">=6.x"
   },
   "dependencies": {
-    "entity-api-base": "modularni-urad/entity-api-base",
+    "entity-api-base": "^0.2",
     "underscore": "^1.13.1"
   },
   "devDependencies": {
