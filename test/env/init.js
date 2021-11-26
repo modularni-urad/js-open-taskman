@@ -1,6 +1,5 @@
 import express from 'express'
 import { initErrorHandlers, APIError } from 'modularni-urad-utils'
-import {addGetLib} from 'modularni-urad-utils/test/utils/suite'
 import { attachPaginate } from 'knex-paginate'
 const SessionServiceMock = require('modularni-urad-utils/test/mocks/sessionService')
 
