@@ -3,12 +3,12 @@ import Comments from './comments'
 import Solvers from './solvers'
 
 export default (ctx) => {
-  const { auth, express, bodyParser, knex, ErrorClass } = ctx
+  const { auth, express, bodyParser } = ctx
   const { required, session } = auth
   const api = express()
-  const taskMW = Tasks(knex, ErrorClass)
-  const commetsMW = Comments(knex, ErrorClass)
-  const solversMW = Solvers(knex, ErrorClass)
+  const taskMW = Tasks(ctx)
+  const commetsMW = Comments(ctx)
+  const solversMW = Solvers(ctx)
 
   api.post('/', session, required, bodyParser, taskMW.checkData, taskMW.create)
   api.put('/:id', session, required, bodyParser, taskMW.checkData, taskMW.update)

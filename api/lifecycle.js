@@ -1,12 +1,11 @@
 import { TABLE_NAMES, STATE, getQB } from '../consts'
-import _ from 'underscore'
 const { TASKS, COMMENTS } = TABLE_NAMES
 
 function _invalidTransitionMsg (task, newstate) {
   return `invalid transition ${task.state} x> ${newstate}`
 }
 
-export default (knex, ErrorClass) => {
+export default (knex, ErrorClass, _) => {
   return {
     refuseDelegation: async function (task, newstate, body, UID, schema) {
       if (task.state !== STATE.DELEG_REQ) {

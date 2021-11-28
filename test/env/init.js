@@ -38,7 +38,14 @@ module.exports = function (g) {
     const appContext = { 
       express, knex, auth, 
       bodyParser: express.json(),
-      ErrorClass: APIError
+      ErrorClass: APIError,
+      require: function(name) {
+        try {
+          return require(name)
+        } catch (err) {
+          console.error(err)
+        }    
+      }
     }
     const mwarez = ApiModule.init(appContext)
     app.use(mwarez)

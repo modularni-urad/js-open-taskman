@@ -1,14 +1,15 @@
-import _ from 'underscore'
 import { TABLE_NAMES } from '../consts'
-import EntityMarez from 'entity-api-base'
 
 const conf = {
   tablename: TABLE_NAMES.COMMENTS,
   editables: ['content']
 }
 
-export default (knex, ErrorClass) => {
-  const MW = EntityMarez(conf, knex, ErrorClass)
+export default (ctx) => {
+  const { knex, ErrorClass } = ctx
+  const entityMWBase = ctx.require('entity-api-base').default
+  const _ = ctx.require('underscore')
+  const MW = entityMWBase(conf, knex, ErrorClass)
   return {
     create: (req, res, next) => {
       // TODO: check if I can

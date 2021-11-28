@@ -1,11 +1,11 @@
 import { TABLE_NAMES, STATE, getQB } from '../consts'
-import _ from 'underscore'
 import Lifecycle from './lifecycle'
 const { TASKS, COMMENTS } = TABLE_NAMES
 
-export default (knex, ErrorClass) => {
-
-  const lifecycle = Lifecycle(knex, ErrorClass)
+export default (ctx) => {
+  const { knex, ErrorClass } = ctx
+  const _ = ctx.require('underscore')
+  const lifecycle = Lifecycle(knex, ErrorClass, _)
   return { delegate, changeState }
 
   async function delegate (taskid, toUID, UID, schema) {

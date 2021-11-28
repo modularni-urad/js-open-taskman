@@ -1,4 +1,3 @@
-import _ from 'underscore'
 import { TABLE_NAMES, STATE, PRIORITY } from '../consts'
 
 function tableName (tname) {
@@ -20,8 +19,8 @@ exports.up = (knex, Promise) => {
     table.string('manager')
     table.string('solver')
     table.string('solvers')
-    table.enum('state', _.values(STATE)).notNullable().defaultTo(STATE.NEW)
-    table.enum('prio', _.values(PRIORITY)).notNullable().defaultTo(PRIORITY.NORMAL)
+    table.enum('state', Object.values(STATE)).notNullable().defaultTo(STATE.NEW)
+    table.enum('prio', Object.values(PRIORITY)).notNullable().defaultTo(PRIORITY.NORMAL)
     table.date('due')
     table.timestamp('created').notNullable().defaultTo(knex.fn.now())
   })

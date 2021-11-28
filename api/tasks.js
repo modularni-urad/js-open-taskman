@@ -1,13 +1,13 @@
-import _ from 'underscore'
 import { TABLE_NAMES, STATE } from '../consts'
-import EntityMarez from 'entity-api-base'
 const conf = {
   tablename: TABLE_NAMES.TASKS,
   editables: ['name', 'tags', 'desc', 'prio', 'due']
 }
 
-export default (knex, ErrorClass) => {
-  const MW = EntityMarez(conf, knex, ErrorClass)
+export default (ctx) => {
+  const { knex, ErrorClass } = ctx
+  const entityMWBase = ctx.require('entity-api-base').default
+  const MW = entityMWBase(conf, knex, ErrorClass)
   return {
     create: (req, res, next) => {
       Object.assign(req.body, { owner: req.user.id })
