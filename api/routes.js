@@ -18,12 +18,12 @@ export default (ctx) => {
   api.get('/:id/comments', commetsMW.list)
 
   api.post('/:id/delegation/:uid', session, required, (req, res, next) => {
-    solversMW.delegate(req.params.id, req.params.uid, req.user.id.toString(), req.schema)
+    solversMW.delegate(req.params.id, req.params.uid, req.user.id.toString(), req.tenantid)
       .then(saved => res.json(saved))
       .catch(next)
   })
   api.put('/:id/state/:state', session, required, bodyParser, (req, res, next) => {
-    solversMW.changeState(req.params.id, req.params.state, req.body, req.user.id.toString(), req.schema)
+    solversMW.changeState(req.params.id, req.params.state, req.body, req.user.id.toString(), req.tenantid)
       .then(saved => res.json(saved))
       .catch(next)
   })

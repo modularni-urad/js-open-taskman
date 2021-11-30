@@ -14,14 +14,14 @@ export default (ctx) => {
     create: (req, res, next) => {
       // TODO: check if I can
       Object.assign(req.body, { author: req.user.id, taskid: req.params.id })
-      MW.create(req.body, req.schema)
+      MW.create(req.body, req.tenantid)
         .then(saved => res.status(201).json(saved))
         .catch(next)
     },
     list: (req, res, next) => {
       req.query.filter = req.query.filter ? JSON.parse(req.query.filter) : {}
       Object.assign(req.query.filter, { taskid: req.params.id })
-      MW.list(req.query, req.schema)
+      MW.list(req.query, req.tenantid)
         .then(data => res.json(data))
         .catch(next)
     }
