@@ -12,12 +12,33 @@ module.exports = (g) => {
       res.should.have.status(400)
     })
 
+    it('user 150 must not see g.task without filter', async () => {
+      g.mockUser.id = 150
+      const res = await r.get(`/`).set('Authorization', 'Bearer f')
+      res.should.have.status(200)
+      res.body.length.should.eql(0)
+    })
+
+    it('user 150 must not see g.task without filter', async () => {
+      g.mockUser.groups = [ 'task_observers' ]
+      const res = await r.get(`/`).set('Authorization', 'Bearer f')
+      res.should.have.status(200)
+      res.body.length.should.eql(1)
+    })
+
     it('shall create delegate', async () => {
       g.mockUser.id = 42
       const res = await r.post(`/${g.task.id}/delegation/150`)
         .set('Authorization', 'Bearer f')
       res.should.have.status(200)
       // TODO: check status
+    })
+
+    it('user 150 shall see g.task without filter, coz delegated', async () => {
+      g.mockUser.id = 150
+      const res = await r.get(`/`).set('Authorization', 'Bearer f')
+      res.should.have.status(200)
+      res.body.length.should.eql(1)
     })
 
     it('shall accept delegation', async () => {

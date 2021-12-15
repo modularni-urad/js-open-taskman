@@ -36,6 +36,7 @@ module.exports = (g) => {
 
     it('shall get the pok1', async () => {
       const res = await r.get('/').query({ filter: JSON.stringify({ id: p.id }) })
+        .set('Authorization', 'Bearer f')
       res.body.length.should.eql(1)
       res.body[0].name.should.eql(p.name)
       res.should.have.status(200)
@@ -51,7 +52,7 @@ module.exports = (g) => {
       res.should.have.status(200)
     })
 
-    it('shall update the item pok1', async () => {
+    it('mustnot update the item pok1, not owner', async () => {
       g.mockUser.id = 200
       const change = {
         name: 'pok1changed again'
@@ -62,7 +63,7 @@ module.exports = (g) => {
     })
 
     it('shall list with paginate', async () => {
-      const res = await r.get('/').query({ currentPage: 1, perPage: 2 })
+      const res = await r.get('/').query({ currentPage: 1, perPage: 2 }).set('Authorization', 'Bearer f')
       res.body.data.length.should.eql(1)
       res.body.data[0].name.should.eql('pok1changed')
       res.should.have.status(200)
