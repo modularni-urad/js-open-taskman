@@ -13,6 +13,7 @@ export default (ctx) => {
   api.post('/', session, required, bodyParser, taskMW.checkData, taskMW.create)
   api.put('/:id', session, required, bodyParser, taskMW.checkData, taskMW.update)
   api.get('/', session, required, taskMW.list)
+  api.get('/:id', taskMW.get)
 
   api.post('/:id/comments', session, required, bodyParser, commetsMW.create)
   api.get('/:id/comments', commetsMW.list)

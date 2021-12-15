@@ -68,5 +68,11 @@ module.exports = (g) => {
       res.body.data[0].name.should.eql('pok1changed')
       res.should.have.status(200)
     })
+
+    it('shall get task', async () => {
+      const res = await r.get(`/${p.id}`)
+      res.should.have.status(200)
+      res.body.name.should.eql('pok1changed')
+    })
   })
 }

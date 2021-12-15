@@ -44,6 +44,9 @@ export default (ctx) => {
         .then(data => res.json(data))
         .catch(next)
     },
+    get: (req, res, next) => {
+      MW.get(req.params.id, req.tenantid).then(data => res.json(data)).catch(next)
+    },
     checkData: (req, res, next) => {
       try {
         MW.check_data(req.body)
