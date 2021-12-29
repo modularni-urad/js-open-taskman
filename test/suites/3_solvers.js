@@ -3,7 +3,7 @@ import { STATE } from '../../consts'
 module.exports = (g) => {
   const r = g.chai.request(g.baseurl)
 
-  return describe('tasks', () => {
+  return describe('task delegation', () => {
     //
     it('must not delegate coz we are not owner', async () => {
       g.mockUser.id = 100
@@ -14,12 +14,13 @@ module.exports = (g) => {
 
     it('user 150 must not see g.task without filter', async () => {
       g.mockUser.id = 150
+      g.mockUser.groups = []
       const res = await r.get(`/`).set('Authorization', 'Bearer f')
       res.should.have.status(200)
       res.body.length.should.eql(0)
     })
 
-    it('user 150 must not see g.task without filter', async () => {
+    it('user 150 shall see g.task without filter coz in task_observers', async () => {
       g.mockUser.groups = [ 'task_observers' ]
       const res = await r.get(`/`).set('Authorization', 'Bearer f')
       res.should.have.status(200)
