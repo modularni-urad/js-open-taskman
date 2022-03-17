@@ -32,7 +32,7 @@
     "knex": "^0.95.0",
     "knex-paginate": "^3",
     "mocha": "^8.0.1",
-    "modularni-urad-utils": "modularni-urad/utils",
+    "modularni-urad-utils": "git+https://github.com/modularni-urad/utils.git",
     "moment": "^2.29.1",
     "sqlite3": "^4.2.0"
   },

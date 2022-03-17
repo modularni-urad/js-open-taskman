@@ -1,10 +1,11 @@
+import _ from 'underscore'
+import { notifyUser } from 'modularni-urad-utils/notifyer'
 import { TABLE_NAMES, STATE, getQB } from '../consts'
 import Lifecycle from './lifecycle'
 const { TASKS, COMMENTS } = TABLE_NAMES
 
 export default (ctx) => {
-  const { knex, ErrorClass } = ctx
-  const _ = ctx.require('underscore')
+  const { knex, ErrorClass } = ctx  
   const lifecycle = Lifecycle(knex, ErrorClass, _)
   return { delegate, changeState }
 
@@ -25,6 +26,7 @@ export default (ctx) => {
       content: `SYS: DELEGATE: ${toUID}`,
       author: UID
     })
+    notifyUser(schema, task.name, toUID, 'task', task.id)
     return updated
   }
   
