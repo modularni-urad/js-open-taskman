@@ -27,6 +27,13 @@ module.exports = (g) => {
       res.body.length.should.eql(1)
     })
 
+    it('must not create delegate withou delegated person', async () => {
+      g.mockUser.id = 42
+      const res = await r.post(`/${g.task.id}/delegation/null`)
+        .set('Authorization', 'Bearer f')
+      res.should.have.status(400)
+    })
+
     it('shall create delegate', async () => {
       g.mockUser.id = 42
       const res = await r.post(`/${g.task.id}/delegation/150`)

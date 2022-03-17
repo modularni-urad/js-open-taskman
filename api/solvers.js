@@ -9,6 +9,7 @@ export default (ctx) => {
   return { delegate, changeState }
 
   async function delegate (taskid, toUID, UID, schema) {
+    if (!toUID || toUID === 'null') throw new ErrorClass(400, 'delegated person not specified')
     const task = await getQB(knex, TASKS, schema).where('id', taskid).first()
     if (!_.contains([task.owner, task.solver], UID)) {
       throw new ErrorClass(400, 'you cannot delegate')
